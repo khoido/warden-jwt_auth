@@ -33,6 +33,14 @@ module Warden
         env['HTTP_AUTHORIZATION']
       end
 
+      # Returns request parameters environment variable
+      #
+      # @param env [Hash] Rack env
+      # @return [Hash]
+      def self.request_params(env)
+        env['action_dispatch.request.parameters']
+      end
+
       # Returns a copy of `env` with value added to the `HTTP_AUTHORIZATION`
       # environment variable.
       #
