@@ -25,8 +25,8 @@ module Warden
 
     def upcase_first_items(array)
       array.map do |tuple|
-        method, path = tuple
-        [method.to_s.upcase, path]
+        method, *rest = tuple
+        [method.to_s.upcase, *rest]
       end
     end
 
@@ -60,13 +60,14 @@ module Warden
       constantize_values(symbolize_keys(value))
     end
 
-    # Array of tuples [request_method, request_path_regex] to match request
+    # Array of tuples [request_method, request_path_regex, operation_name] to match request
     # verbs and paths where a JWT token should be added to the `Authorization`
     # response header
     #
     # @example
     #  [
-    #    ['POST', %r{^/sign_in$}]
+    #    ['POST', %r{^/sign_in$}],
+    #    ['POST', '/graphql', 'login'],
     #  ]
     setting(:dispatch_requests, []) do |value|
       upcase_first_items(value)
