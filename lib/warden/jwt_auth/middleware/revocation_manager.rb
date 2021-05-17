@@ -29,17 +29,19 @@ module Warden
           token = HeaderParser.from_env(env)
           path_info = EnvHelper.path_info(env)
           method = EnvHelper.request_method(env)
-          return unless token && token_should_be_revoked?(path_info, method)
+          params = EnvHelper.request_params(env) || {}
+          return unless token && token_should_be_revoked?(path_info, method, params)
 
           TokenRevoker.new.call(token)
         end
 
-        def token_should_be_revoked?(path_info, method)
+        def token_should_be_revoked?(path_info, method, params)
           revocation_requests = config.revocation_requests
           revocation_requests.each do |tuple|
-            revocation_method, revocation_path = tuple
+            revocation_method, revocation_path, operation_name = tuple
             return true if path_info.match(revocation_path) &&
-                           method == revocation_method
+                           method == revocation_method &&
+                           params['operationName'] == operation_name
           end
           false
         end

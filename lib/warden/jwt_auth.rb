@@ -73,12 +73,13 @@ module Warden
       upcase_first_items(value)
     end
 
-    # Array of tuples [request_method, request_path_regex] to match request
+    # Array of tuples [request_method, request_path_regex, operation_name] to match request
     # verbs and paths where incoming JWT token should be be revoked
     #
     # @example
     #  [
-    #    ['DELETE', %r{^/sign_out$}]
+    #    ['DELETE', %r{^/sign_out$}],
+    #    ['DELETE', %r{^/graphql}, 'logout']
     #  ]
     setting :revocation_requests, [] do |value|
       upcase_first_items(value)
